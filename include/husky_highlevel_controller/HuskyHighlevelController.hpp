@@ -4,11 +4,15 @@
 #include "std_msgs/String.h"
 #include <sensor_msgs/LaserScan.h>
 <<<<<<< HEAD
+
+=======
+<<<<<<< HEAD
 #include <algorithm>
 #include <iostream>
 #include <vector>
 =======
 >>>>>>> 9302b2d401ece18f8849567e3fb895c1cb6b6d41
+>>>>>>> f83d14b439d5949fb872e7cf050755dae7be901e
 
 namespace husky_highlevel_controller {
 
