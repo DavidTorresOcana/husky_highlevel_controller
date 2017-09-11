@@ -3,6 +3,9 @@
 #include <ros/ros.h>
 #include "std_msgs/String.h"
 #include <sensor_msgs/LaserScan.h>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 namespace husky_highlevel_controller {
 
