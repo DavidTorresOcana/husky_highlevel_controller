@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+
+	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+		<rosparam command="load" file="$(find husky_control)/config/localization.yaml" />
+	</node>
+	
+	<param name="use_sim_time" value="true"/>
+
+  	<!-- Load Husky model-->
+	<arg name="laser_enabled" default="$(optenv HUSKY_LMS1XX_ENABLED false)"/>
+	<arg name="ur5_enabled" default="$(optenv HUSKY_UR5_ENABLED false)"/>
+	<arg name="kinect_enabled" default="false"/>
+
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(env HUSKY_DESCRIPTION)'
+		laser_enabled:=$(arg laser_enabled)
+		ur5_enabled:=$(arg ur5_enabled)
+		kinect_enabled:=$(arg kinect_enabled)
+		" />
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<node name="rviz" pkg="rviz" type="rviz" />
+
+</launch>
