@@ -102,7 +102,7 @@ namespace husky_highlevel_controller {
       msg_vel_cmd_.linear.x = lin_vel;
       msg_vel_cmd_.angular.z =  ang_p_gain*(0-ang_min);
 
-      if(!stat_stop_flag){ // If  Stop has been commanded
+      if(!start_stop_flag){ // If  Stop has been commanded
         msg_vel_cmd_.linear.x = 0.0;
         msg_vel_cmd_.angular.z = 0.0;
       }
@@ -118,12 +118,12 @@ namespace husky_highlevel_controller {
   {
       try{
         // if true means Start/resume the robot
-        if(request.data){  stat_stop_flag = true; }
-        else{  stat_stop_flag = false; }
+        if(request.data){  start_stop_flag = true; }
+        else{  start_stop_flag = false; }
         response.success = true;
       }
       catch(...){
-        ROS_WARN("Imposible to execute Start-Stop service");
+        ROS_WARN("Impossible to execute Start-Stop service");
         ros::Duration(1.0).sleep();
         response.success = false;
         //continue;

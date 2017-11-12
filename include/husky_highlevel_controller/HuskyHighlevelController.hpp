@@ -34,7 +34,7 @@ namespace husky_highlevel_controller {
 
 			std::string sub_topic_name;
 			int queue_size;
-			bool stat_stop_flag=true; // True means can move. false means Stop!
+			bool start_stop_flag=true; // True means can move. false means Stop!
 			float min_range, ang_min, x_pillar, y_pillar, ang_p_gain,lin_vel,ang2rob,r2rob;
 		public:
 			/*!

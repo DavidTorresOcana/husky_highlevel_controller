@@ -48,11 +48,11 @@ add_executable(${PROJECT_NAME}
   src/HuskyHighlevelController.cpp
 )
 
-	## Services server node
-add_executable(husky_highlevel_ctrl_services 
-  src/husky_highlevel_ctrl_services.cpp
+	## Husky High level control logic
+add_executable(husky_highlevel_ctrl_logic 
+  src/husky_highlevel_ctrl_logic.cpp
 )
-target_link_libraries(husky_highlevel_ctrl_services
+target_link_libraries(husky_highlevel_ctrl_logic
   ${catkin_LIBRARIES}
 )
 ## Specify libraries to link a library or executable target against

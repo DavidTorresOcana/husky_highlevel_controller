@@ -16,7 +16,7 @@
 	</node>
 	
 	
-	<node pkg="husky_highlevel_controller" type="husky_highlevel_ctrl_services" name="husky_highlevel_ctrl_services" output="screen"/>
+	<node pkg="husky_highlevel_controller" type="husky_highlevel_ctrl_logic" name="husky_highlevel_ctrl_logic" output="screen"/>
 	
 	
 </launch>
