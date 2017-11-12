@@ -50,7 +50,7 @@ add_executable(${PROJECT_NAME}
 
 	## Services server node
 add_executable(husky_highlevel_ctrl_services 
-  src/husky_start_stop_service_server.cpp
+  src/husky_highlevel_ctrl_services.cpp
 )
 target_link_libraries(husky_highlevel_ctrl_services
   ${catkin_LIBRARIES}
