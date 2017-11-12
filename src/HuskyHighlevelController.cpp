@@ -14,6 +14,9 @@ namespace husky_highlevel_controller {
 	  HuskyHighlevelController::subscription_gen();
 	  // Publishers
     HuskyHighlevelController::publishers_gen();
+    // Services
+    HuskyHighlevelController::services_gen();
+
 	}
 
 	HuskyHighlevelController::~HuskyHighlevelController()
@@ -52,12 +55,9 @@ namespace husky_highlevel_controller {
 		  x_pillar = min_range*cos(ang_min);
 		  y_pillar = min_range*sin(ang_min);
 		  ROS_INFO_STREAM("\n x = "<<x_pillar<<"\n y = "<<y_pillar);
-		  // Compute vel command to hit the pillar
-		  msg_vel_cmd_.linear.x = lin_vel;
-		  msg_vel_cmd_.angular.z =  ang_p_gain*(0-ang_min);
 
-		  // Publish the command
-		  pub_vel_cmd_.publish(msg_vel_cmd_);
+		  // Execute the control loop
+		  HuskyHighlevelController::control_2_target();
 
 		  // Publish the marker of the obstacle
 		  marker.header.frame_id = "base_laser";
@@ -76,17 +76,61 @@ namespace husky_highlevel_controller {
 		  marker.color.r = 0.0;
 		  marker.color.g = 1.0;
 		  marker.color.b = 0.0;
-		  //vis_pub.publish( marker );
+
 		  // Publish marker positions, with diferent method
-		  marker.header.frame_id = "odom";
-		  try { transformStamped = tfBuffer.lookupTransform("base_laser","odom", ros::Time(0));  }
-		  catch (tf2::TransformException &exception) { ROS_WARN("%s", exception.what()); ros::Duration(1.0).sleep(); continue;  }
+		  /*marker.header.frame_id = "odom";
+
+		  try {
+		    transformStamped = tfBuffer.lookupTransform("base_laser","odom", ros::Time(0));
+		  }
+		  catch (tf2::TransformException &exception) {
+		    ROS_WARN("%s", exception.what());
+		    ros::Duration(1.0).sleep();
+		    continue;
+		  }
 		  ang2rob = atan2(transformStamped.transform.translation.y, transformStamped.transform.translation.x);
 		  r2rob = sqrt(transformStamped.transform.translation.y*transformStamped.transform.translation.y+ transformStamped.transform.translation.x* transformStamped.transform.translation.x);
 
 		  marker.pose.position.x = r2rob*cos(ang2rob)+min_range*cos(ang_min+ang2rob);
 		  marker.pose.position.y = r2rob*sin(ang2rob)+min_range*sin(ang_min+ang2rob);
-
+*/
 		  vis_pub.publish( marker );
 	}
+
+  void HuskyHighlevelController::control_2_target(){
+      // Compute vel command to hit the pillar
+      msg_vel_cmd_.linear.x = lin_vel;
+      msg_vel_cmd_.angular.z =  ang_p_gain*(0-ang_min);
+
+      if(!stat_stop_flag){ // If  Stop has been commanded
+        msg_vel_cmd_.linear.x = 0.0;
+        msg_vel_cmd_.angular.z = 0.0;
+      }
+      // Publish the command
+      pub_vel_cmd_.publish(msg_vel_cmd_);
+
+  }
+  void HuskyHighlevelController::services_gen()
+  {
+    service_start_stop = nodeHandle_.advertiseService("husky_start_stop", &HuskyHighlevelController::srv_action_start_stop,this);
+  }
+  bool HuskyHighlevelController::srv_action_start_stop(std_srvs::SetBool::Request &request, std_srvs::SetBool::Response &response)
+  {
+      try{
+        // if true means Start/resume the robot
+        if(request.data){  stat_stop_flag = true; }
+        else{  stat_stop_flag = false; }
+        response.success = true;
+      }
+      catch(...){
+        ROS_WARN("Imposible to execute Start-Stop service");
+        ros::Duration(1.0).sleep();
+        response.success = false;
+        //continue;
+      }
+
+      ROS_INFO("request: %i", request.data );
+      ROS_INFO(" sending back response: [%i]", response.success);
+      return true;
+  }
 } /* namespace */

@@ -7,6 +7,7 @@
 #include <visualization_msgs/Marker.h>
 #include <tf2_ros/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
+#include <std_srvs/SetBool.h>
 
 namespace husky_highlevel_controller {
 
@@ -24,12 +25,16 @@ namespace husky_highlevel_controller {
 			ros::Publisher vis_pub;
 			visualization_msgs::Marker marker;
 
-			tf2_ros::Buffer tfBuffer;
-			tf2_ros::TransformListener tfListener(tfBuffer);
-			geometry_msgs::TransformStamped transformStamped;
+			/*tf2_ros::Buffer tfBuffer;
+      tf2_ros::TransformListener tfListener(tfBuffer);
+      geometry_msgs::TransformStamped transformStamped;
+			 */
+
+			ros::ServiceServer service_start_stop;
 
 			std::string sub_topic_name;
 			int queue_size;
+			bool stat_stop_flag=true; // True means can move. false means Stop!
 			float min_range, ang_min, x_pillar, y_pillar, ang_p_gain,lin_vel,ang2rob,r2rob;
 		public:
 			/*!
@@ -61,7 +66,18 @@ namespace husky_highlevel_controller {
        * Load parameters.
        */
       virtual void Load_param();
-
+      /*!
+       * Control loop function.
+       */
+      virtual void control_2_target();
+      /*!
+       * Services creation.
+       */
+      virtual void services_gen();
+      /*!
+       * Services Start-stop action.
+       */
+      virtual bool srv_action_start_stop(std_srvs::SetBool::Request &request, std_srvs::SetBool::Response &response);
 
 	};
 

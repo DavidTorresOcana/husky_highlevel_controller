@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
+
 project(husky_highlevel_controller)
 
 ## Use C++11
@@ -41,11 +42,19 @@ include_directories(
 )
 
 ## Declare a C++ executable
-add_executable(${PROJECT_NAME}
+	## Main node
+add_executable(${PROJECT_NAME} 
   src/${PROJECT_NAME}_node.cpp
   src/HuskyHighlevelController.cpp
 )
 
+	## Services server node
+add_executable(husky_highlevel_ctrl_services 
+  src/husky_start_stop_service_server.cpp
+)
+target_link_libraries(husky_highlevel_ctrl_services
+  ${catkin_LIBRARIES}
+)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
